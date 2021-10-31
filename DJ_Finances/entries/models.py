@@ -27,6 +27,10 @@ class Entry(models.Model):
         default="",
     )
 
+    class Meta:
+        # Ensure that entries are always sorted chronologically in querysets.
+        ordering = ['created_at']
+
     def to_dict(self):
         return {
             "id": str(self.id),
