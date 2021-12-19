@@ -36,7 +36,7 @@ class Entry(models.Model):
             "id": str(self.id),
             "title": self.title,
             "comment": self.comment,
-            "amount": str(self.amount),
+            "amount": float(self.amount),
             "created_at": self.created_at.strftime("%s"),
         }
 
