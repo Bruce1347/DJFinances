@@ -3,6 +3,8 @@ import uuid
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
+from marshmallow import Schema, fields, validate
+
 
 class Entry(models.Model):
     id = models.UUIDField(
@@ -47,3 +49,13 @@ class Entry(models.Model):
             return entry
         except ObjectDoesNotExist:
             return None
+
+class EntrySchema(Schema):
+    amount = fields.Decimal(
+        2,
+        validate=validate.Range(min=-10_000, max=10_000)
+    )
+    title = fields.Str(validate=validate.Length(max=300))
+    comment = fields.Str()
+    id = fields.UUID(read_only=True)
+    created_at = fields.DateTime(read_only=True)
