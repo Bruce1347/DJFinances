@@ -52,3 +52,37 @@ class EntriesRetrievalTestCase(TestCase):
                 str(self.entry_3.id),
             ],
         )
+
+
+class EntryCreationTestCase(TestCase):
+    def test_create_entry(self):
+        payload = {
+            'amount': -42.69,
+            'title': 'test entry',
+            'comment': 'foo\nbar',
+        }
+
+        response = self.client.post('/entries/', data=payload, content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+
+        created = Entry.objects.get(id=data['id'])
+        assert created.amount == Decimal('-42.69')
+        assert created.title == 'test entry'
+        assert created.comment == 'foo\nbar'
+
+class EntryDeletionTestCase(TestCase):
+    def setUp(self) -> None:
+        self.entry = EntryFactory.create()
+
+    def test_delete_none_entry(self):
+        response = self.client.delete('/entries/foobar2000')
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_delete_one_entry(self):
+        response = self.client.delete(f'/entries/{self.entry.id}')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(0, Entry.objects.count())

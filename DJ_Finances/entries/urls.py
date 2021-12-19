@@ -1,7 +1,7 @@
 from django.urls import path
-from entries.views import get_entry, get_entries
+from entries.views import entry_request_dispatcher, entries_request_dispatcher
 
 urlpatterns = [
-    path('', get_entries),
-    path('<uuid:entry_id>', get_entry),
+    path('', entries_request_dispatcher),
+    path('<uuid:entry_id>', entry_request_dispatcher),
 ]
